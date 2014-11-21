@@ -13,13 +13,43 @@ public class TCPReaderValhalla2300 extends Thread {
 	private BufferedReader inFromGPIB;
 	private DataOutputStream outToGPIB;
 	private Socket clientSocket;
-	
 
+	public boolean isConnected() {
+		if ( null == clientSocket )
+			return false;
+		
+		return clientSocket.isConnected();
+	}
 
 	public void addPacketListener(ListenerValhalla2300 b) {
 		packetListeners.add(b);
 	}
 
+	public boolean sendLine(String s) {
+		if ( null == clientSocket ) 
+			return false;
+		
+		
+		while ( ! clientSocket.isConnected() ) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		System.err.println("# TCPReaderValhalla2300 sendLine('" + s + "')");
+		try {
+			outToGPIB.writeBytes(s);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+
+		return true;
+	}
 
 	public void run() {
 
@@ -28,8 +58,8 @@ public class TCPReaderValhalla2300 extends Thread {
 			clientSocket = new Socket(host, port);
 
 
-			System.err.println(clientSocket.toString());
-			System.err.println("Connected? " + clientSocket.isConnected());
+			//			System.err.println(clientSocket.toString());
+			//			System.err.println("Connected? " + clientSocket.isConnected());
 
 			inFromGPIB = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			outToGPIB = new DataOutputStream(clientSocket.getOutputStream());
@@ -38,7 +68,11 @@ public class TCPReaderValhalla2300 extends Thread {
 			while ( clientSocket.isConnected() ) {
 				String line=inFromGPIB.readLine();
 
-//				System.err.println("# TCPReaderValhalla2300 received: " + line);
+				if ( null == line ) {
+					break;
+				}
+				
+				System.err.println("# TCPReaderValhalla2300 received: " + line);
 
 				/* send packet to listeners */
 				for ( int i=0 ; i<packetListeners.size(); i++ ) {
