@@ -72,7 +72,7 @@ public class TCPReaderValhalla2300 extends Thread {
 					break;
 				}
 				
-				System.err.println("# TCPReaderValhalla2300 received: " + line);
+//				System.err.println("# TCPReaderValhalla2300 received: " + line);
 
 				/* send packet to listeners */
 				for ( int i=0 ; i<packetListeners.size(); i++ ) {
