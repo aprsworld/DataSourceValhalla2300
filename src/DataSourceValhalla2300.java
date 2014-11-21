@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 
@@ -5,7 +6,6 @@ import javax.swing.*;
 
 
 public class DataSourceValhalla2300 implements ListenerValhalla2300 {
-	public static final boolean gui=true;
 	public static final boolean debug=false;
 
 	public String gpibHostname;
@@ -13,6 +13,7 @@ public class DataSourceValhalla2300 implements ListenerValhalla2300 {
 	public String outPrefix;
 	
 	/* GUI stuff */
+	public static final boolean gui=true;
 	protected JLabel labelCurrentValue;
 
 
@@ -49,7 +50,9 @@ public class DataSourceValhalla2300 implements ListenerValhalla2300 {
 		frame.getContentPane().add(labelCurrentValue);
 
 		//Display the window.
+		frame.setMinimumSize(new Dimension(400,150));
 		frame.pack();
+		
 		frame.setVisible(true);
 	}
 
@@ -87,7 +90,7 @@ public class DataSourceValhalla2300 implements ListenerValhalla2300 {
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.err.println("# Major version: 2014-11-20 (precision)");
+		System.err.println("# Major version: 2014-11-21 (precision)");
 		System.err.println("# java.library.path: " + System.getProperty( "java.library.path" ));
 
 		DataSourceValhalla2300 d = new DataSourceValhalla2300();
